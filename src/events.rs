@@ -84,7 +84,11 @@ fn get_kubewarden_events(
     connection_config: &ConnectionConfig,
     req_cfg_id: &str,
 ) -> Result<k8s_openapi::List<Event>> {
-    let (k8s_req, response_body) = Event::list_event_for_all_namespaces(Default::default())?;
+    let field_selector = k8s_openapi::ListOptional {
+        field_selector: Some("reason=ValidationRejection"),
+        ..Default::default()
+    };
+    let (k8s_req, response_body) = Event::list_event_for_all_namespaces(field_selector)?;
 
     let response = make_request(k8s_req, connection_config, req_cfg_id)?;
 

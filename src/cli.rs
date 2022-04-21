@@ -18,7 +18,7 @@ pub(crate) struct Cli {
 
 #[derive(Debug, Subcommand)]
 pub(crate) enum Commands {
-    /// Run
+    /// List all the `ValidationRejection` events
     #[clap(arg_required_else_help = false)]
     Events,
 }

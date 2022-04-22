@@ -1,10 +1,14 @@
-name: krew-wasm release
+name: release plugin
 on:
   push:
+    branches:
+    - main
     tags:
     - 'v*'
+
 env:
   CARGO_TERM_COLOR: always
+
 jobs:
 
   ci:

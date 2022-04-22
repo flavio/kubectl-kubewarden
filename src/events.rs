@@ -11,7 +11,6 @@ pub fn print_kubewarden_events(
     connection_config: &ConnectionConfig,
     req_cfg_id: &str,
 ) -> Result<()> {
-    //TODO: filter by event type
     let event_list = get_kubewarden_events(connection_config, req_cfg_id)?;
 
     if event_list.items.is_empty() {

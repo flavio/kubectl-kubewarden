@@ -2,8 +2,8 @@
 
 > ⚠️ ⚠️ **WARNING:** this plugin is an experimental POC meant to demonstrate
 > how kubectl plugins can be written using WebAssembly and WASI. It currently
-> offers really limited features that are available only with experimental
-> builds of Kubewarden.
+> offers really limited features that are available only with an
+> experimental integration of the Kubernetes API server and Kubewarden.
 
 This is an experimental kubectl plugin that interacts with a Kubewarden instance
 deployed on top of a Kubernetes cluster.
@@ -15,7 +15,7 @@ This plugin is written using WebAssembly and WASI, it can be used via the
 
 * A Kubewarden stack
 * A working kubeconfig file
-* A generic version of `kubectl`
+* A vanilla version of `kubectl`
 * Latest version of `krew-wasm` installed
 
 ## Installation
@@ -58,5 +58,7 @@ Found 2 events
 ║                     ║         ║                                        ║     rce_version: None, uid: None }     ║                           ║                           ║
 ```
 
-> **Note well:** This type of events is not emitted by regular Kubewarden deployments, this is
-> currently done only by a special build of Kubewarden.
+> **Note well:** This type of events is not emitted by a regular
+> Kubewarden installation, this is currently done only by an
+> experimental integration of the Kubernetes API server and
+> Kubewarden.

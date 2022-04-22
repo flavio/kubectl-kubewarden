@@ -29,7 +29,7 @@ jobs:
       # Required by cosign keyless signing
       id-token: write
 
-    with:
+    inputs:
       plugin_name: kubewarden
       oci-target: ghcr.io/${{ github.repository_owner }}/krew-wasm-plugins/kubewarden
 

@@ -12,7 +12,7 @@ pub fn print_kubewarden_events(
     req_cfg_id: &str,
 ) -> Result<()> {
     //TODO: filter by event type
-    let event_list = get_kubewarden_events(&connection_config, &req_cfg_id)?;
+    let event_list = get_kubewarden_events(connection_config, req_cfg_id)?;
 
     if event_list.items.is_empty() {
         println!("No events found");
@@ -42,18 +42,18 @@ pub fn print_kubewarden_events(
         let first_seen = event
             .first_timestamp
             .map(|t| t.0.to_rfc3339())
-            .unwrap_or("-".to_string());
+            .unwrap_or_else(|| "-".to_string());
         let last_seen = event
             .last_timestamp
             .map(|t| t.0.to_rfc3339())
-            .unwrap_or("-".to_string());
+            .unwrap_or_else(|| "-".to_string());
         let involved_object = format!("{:?}", event.involved_object);
 
         let source_component = event
             .source
-            .map(|s| s.component.unwrap_or("-".to_string()))
-            .unwrap_or("-".to_string());
-        let event_type = event.type_.unwrap_or("-".to_string());
+            .map(|s| s.component.unwrap_or_else(|| "-".to_string()))
+            .unwrap_or_else(|| "-".to_string());
+        let event_type = event.type_.unwrap_or_else(|| "-".to_string());
 
         table.add_row(Row::new(vec![
             TableCell::new_with_alignment(
@@ -63,7 +63,7 @@ pub fn print_kubewarden_events(
             ),
             TableCell::new_with_alignment(event_type, 1, term_table::table_cell::Alignment::Left),
             TableCell::new_with_alignment(
-                event.message.unwrap_or("N/A".to_string()),
+                event.message.unwrap_or_else(|| "N/A".to_string()),
                 1,
                 term_table::table_cell::Alignment::Left,
             ),
@@ -99,7 +99,12 @@ fn get_kubewarden_events(
     // constructor returned by the API function.
     let mut response_body = response_body(status_code);
 
-    response_body.append_slice(response.body.ok_or(anyhow!("no response body"))?.as_slice());
+    response_body.append_slice(
+        response
+            .body
+            .ok_or_else(|| anyhow!("no response body"))?
+            .as_slice(),
+    );
     let response = response_body.parse();
 
     let event_list = match response {

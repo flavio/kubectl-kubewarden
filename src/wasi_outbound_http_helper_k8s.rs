@@ -10,14 +10,14 @@ impl TryFrom<&http::Method> for wasi_outbound_http::Method {
     type Error = &'static str;
 
     fn try_from(method: &http::Method) -> std::result::Result<Self, Self::Error> {
-        match method {
-            &http::Method::GET => Ok(wasi_outbound_http::Method::Get),
-            &http::Method::POST => Ok(wasi_outbound_http::Method::Post),
-            &http::Method::PUT => Ok(wasi_outbound_http::Method::Put),
-            &http::Method::DELETE => Ok(wasi_outbound_http::Method::Delete),
-            &http::Method::PATCH => Ok(wasi_outbound_http::Method::Patch),
-            &http::Method::HEAD => Ok(wasi_outbound_http::Method::Head),
-            &http::Method::OPTIONS => Ok(wasi_outbound_http::Method::Options),
+        match *method {
+            http::Method::GET => Ok(wasi_outbound_http::Method::Get),
+            http::Method::POST => Ok(wasi_outbound_http::Method::Post),
+            http::Method::PUT => Ok(wasi_outbound_http::Method::Put),
+            http::Method::DELETE => Ok(wasi_outbound_http::Method::Delete),
+            http::Method::PATCH => Ok(wasi_outbound_http::Method::Patch),
+            http::Method::HEAD => Ok(wasi_outbound_http::Method::Head),
+            http::Method::OPTIONS => Ok(wasi_outbound_http::Method::Options),
             _ => Err("http method not handled by wasi_outbound_http"),
         }
     }
@@ -59,7 +59,7 @@ pub fn make_request(
     let server_url = connection_config.server.url.parse::<http::uri::Uri>()?;
 
     let uri = http::uri::Builder::new()
-        .scheme(server_url.scheme_str().unwrap_or_else(|| "https"))
+        .scheme(server_url.scheme_str().unwrap_or("https"))
         .authority(server_url.authority().unwrap().as_str())
         .path_and_query(k8s_req.uri().path_and_query().unwrap().as_str())
         .build()?
@@ -73,5 +73,5 @@ pub fn make_request(
         body,
     };
 
-    wasi_outbound_http::request(req, Some(&req_cfg_id)).map_err(|e| anyhow!("{:?}", e))
+    wasi_outbound_http::request(req, Some(req_cfg_id)).map_err(|e| anyhow!("{:?}", e))
 }

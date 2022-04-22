@@ -15,15 +15,15 @@ impl ConnectionConfig {
 
         let kube_ctx = config
             .get_current_context()
-            .ok_or(anyhow!("kubeconf: no default kubernetes context"))?;
+            .ok_or_else(|| anyhow!("kubeconf: no default kubernetes context"))?;
 
         let cluster = kube_ctx
             .get_cluster(&config)
-            .ok_or(anyhow!("kubeconf: cannot find cluster definition"))?;
+            .ok_or_else(|| anyhow!("kubeconf: cannot find cluster definition"))?;
 
         let user = kube_ctx
             .get_user(&config)
-            .ok_or(anyhow!("kubeconf: cannot find user definition"))?;
+            .ok_or_else(|| anyhow!("kubeconf: cannot find user definition"))?;
 
         let identity = UserIdentity::from_kube_user_and_cluster(&user, &cluster)?;
         let server = Server::from_cluster(&cluster)?;
